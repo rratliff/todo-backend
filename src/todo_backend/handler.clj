@@ -8,6 +8,8 @@
 (def app
   (-> routes/app-routes
       (todo-middleware/wrap-cors)
+      (todo-middleware/wrap-response-expand-url-body)
+      (todo-middleware/wrap-response-expand-location)
       (middleware/wrap-json-body)
       (middleware/wrap-json-response)
       (wrap-defaults api-defaults)))

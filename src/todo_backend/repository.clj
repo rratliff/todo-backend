@@ -25,6 +25,9 @@
              ["Select * from todos"]
              {:row-fn row->todo}))
 
+(defn get-by-id [id]
+  (first (sql/query db-spec ["select * from todos where id = ?" id] {:row-fn row->todo})))
+
 (defn create-todo!
   [todo]
   (let [incomplete-todo (merge todo {:completed false})]

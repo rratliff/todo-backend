@@ -5,7 +5,7 @@
             [todo-backend.repository :as store]))
 
 (defn- todo-representation [todo]
-  (merge todo {"url" (str "/todos/" (:id todo))}))
+  (merge todo {:url (str "/todos/" (:id todo))}))
 
 (defn- res->ok [body]
   {:status 200 :body body})
@@ -29,19 +29,21 @@
 (defn create-new-todo [body] (let [new-todo (store/create-todo! body)]
                                    (res->created (todo-representation new-todo))))
 
-(defn get-document [id] (response {:name "Test document" :body "Test body"}))
+(defn get-todo [id] (-> (store/get-by-id id)
+                        (todo-representation)
+                        (res->ok)))
 
 (defn update-document [id, body] {:status 204})
 
 (defn delete-document [id] {:status 204})
 
 (defroutes app-routes
-           (context "/todos" [] (defroutes documents-routes
+           (context "/todos" [] (defroutes todo-routes
                                                (GET "/" [] (get-all-todos))
                                                (DELETE "/" [] (delete-all-todos))
                                                (POST "/" {body :body} (create-new-todo body))
-                                               (context "/:id" [id] (defroutes document-routes
-                                                                               (GET "/" [] (get-document id))
+                                               (context "/:id" [id] (defroutes todo-routes
+                                                                               (GET "/" [] (get-todo id))
                                                                                (PUT "/" {body :body} (update-document id body))
                                                                                (DELETE "/" [] (delete-document id))))))
            (GET "/" [] "Hello World")
