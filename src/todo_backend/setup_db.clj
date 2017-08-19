@@ -10,7 +10,7 @@
                       (sql/create-table-ddl :todos
                                             [[:id "bigint" :primary :key "auto_increment"]
                                              [:title "varchar"]
-                                             [:body "varchar"]])))
+                                             [:completed "boolean"]])))
 
 (defn populate-single-todo []
-  (sql/insert! db-spec :todos {:title "Get milk" :body "Hello world"}))
+  (sql/insert! db-spec :todos {:title "Get milk" :completed false}))

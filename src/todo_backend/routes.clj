@@ -4,15 +4,15 @@
             [compojure.core :refer :all]
             [todo-backend.repository :as store]))
 
-(defn- todo-representation [document]
-  document)
+(defn- todo-representation [todo]
+  (merge todo {"url" (str "/todos/" (:id todo))}))
 
 (defn- res->ok [body]
   {:status 200 :body body})
 
 (defn- res->created [todo]
-  {:status 201
-   :body todo})
+  {:status  201
+   :body    todo})
 
 (defn- res->no-content []
   {:status 204})
@@ -27,7 +27,7 @@
   (res->no-content))
 
 (defn create-new-todo [body] (let [new-todo (store/create-todo! body)]
-                                   (res->created new-todo)))
+                                   (res->created (todo-representation new-todo))))
 
 (defn get-document [id] (response {:name "Test document" :body "Test body"}))
 

@@ -27,9 +27,11 @@
 
 (defn create-todo!
   [todo]
-  (let [id (sql-result->id
-             (sql/insert! db-spec :todos (todo->row todo)))]
-    (merge todo {:id id})))
+  (let [incomplete-todo (merge todo {:completed false})]
+    (let [id (sql-result->id
+               (sql/insert! db-spec :todos (todo->row incomplete-todo)))]
+      (merge incomplete-todo {:id id}))))
+
 
 (defn delete-all!
   []
