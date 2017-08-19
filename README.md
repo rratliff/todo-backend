@@ -1,5 +1,9 @@
 # todo-backend
 
+Implementation of TODO in Clojure. Implements the TODO Backend API (http://www.todobackend.com/index.html).
+
+Middleware was stolen from https://github.com/darrenhaken/todo-backend-clojure
+
 ## Prerequisites
 
 You will need [Leiningen][] 2.0.0 or above installed.
