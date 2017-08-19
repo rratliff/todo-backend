@@ -27,6 +27,6 @@ In the repl:
 
 ```
 (use 'todo-backend.setup-db)
-(create-documents-table)
-(populate-single-doc)
+(create-todos-table)
+(populate-single-todo)
 ```

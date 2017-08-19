@@ -6,12 +6,12 @@
               :subprotocol "h2:file"
               :subname "resources/db/documents;DB_CLOSE_DELAY=-1"})
 
-(defn- row->document [row]
+(defn- row->todo [row]
   row)
 
-(defn- document->row [document]
-  (println document)
-  document)
+(defn- todo->row [todo]
+  (println todo)
+  todo)
 
 (defn- sql-result->id [result-seq]
   (->
@@ -22,11 +22,15 @@
 
 (defn get-all []
   (sql/query db-spec
-             ["Select * from documents"]
-             {:row-fn row->document}))
+             ["Select * from todos"]
+             {:row-fn row->todo}))
 
-(defn create-document!
-  [document]
+(defn create-todo!
+  [todo]
   (let [id (sql-result->id
-             (sql/insert! db-spec :documents (document->row document)))]
-    (merge document {:id id})))
+             (sql/insert! db-spec :todos (todo->row todo)))]
+    (merge todo {:id id})))
+
+(defn delete-all!
+  []
+  (sql/delete! db-spec :todos []))

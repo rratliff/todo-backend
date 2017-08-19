@@ -4,7 +4,7 @@
             [compojure.core :refer :all]
             [todo-backend.repository :as store]))
 
-(defn- document-representation [document]
+(defn- todo-representation [document]
   document)
 
 (defn- res->ok [body]
@@ -14,13 +14,20 @@
   {:status 201
    :body todo})
 
-(defn get-all-documents [] (->
+(defn- res->no-content []
+  {:status 204})
+
+(defn get-all-todos [] (->
                              (store/get-all)
-                             (#(map document-representation %))
+                             (#(map todo-representation %))
                              (res->ok)))
 
-(defn create-new-document [body] (let [new-document (store/create-document! body)]
-                                   (res->created new-document)))
+(defn delete-all-todos []
+  (store/delete-all!)
+  (res->no-content))
+
+(defn create-new-todo [body] (let [new-todo (store/create-todo! body)]
+                                   (res->created new-todo)))
 
 (defn get-document [id] (response {:name "Test document" :body "Test body"}))
 
@@ -29,9 +36,10 @@
 (defn delete-document [id] {:status 204})
 
 (defroutes app-routes
-           (context "/documents" [] (defroutes documents-routes
-                                               (GET "/" [] (get-all-documents))
-                                               (POST "/" {body :body} (create-new-document body))
+           (context "/todos" [] (defroutes documents-routes
+                                               (GET "/" [] (get-all-todos))
+                                               (DELETE "/" [] (delete-all-todos))
+                                               (POST "/" {body :body} (create-new-todo body))
                                                (context "/:id" [id] (defroutes document-routes
                                                                                (GET "/" [] (get-document id))
                                                                                (PUT "/" {body :body} (update-document id body))

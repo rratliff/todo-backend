@@ -5,12 +5,12 @@
               :subprotocol "h2:file"
               :subname "resources/db/documents;DB_CLOSE_DELAY=-1"})
 
-(defn create-documents-table []
+(defn create-todos-table []
   (sql/db-do-commands db-spec
-                      (sql/create-table-ddl :documents
+                      (sql/create-table-ddl :todos
                                             [[:id "bigint" :primary :key "auto_increment"]
-                                             [:name "varchar"]
+                                             [:title "varchar"]
                                              [:body "varchar"]])))
 
-(defn populate-single-doc []
-  (sql/insert! db-spec :documents {:name "Bicycle" :body "Hello world"}))
+(defn populate-single-todo []
+  (sql/insert! db-spec :todos {:title "Get milk" :body "Hello world"}))
