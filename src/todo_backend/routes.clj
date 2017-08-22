@@ -33,9 +33,12 @@
                         (todo-representation)
                         (res->ok)))
 
-(defn update-document [id, body] {:status 204})
+(defn update-todo [id, body] (let [updated-todo (store/update-todo! id body)]
+                               (res->ok (todo-representation updated-todo))))
 
-(defn delete-document [id] {:status 204})
+(defn delete-todo [id]
+  (store/delete-by-id id)
+  (res->no-content))
 
 (defroutes app-routes
            (context "/todos" [] (defroutes todo-routes
@@ -44,7 +47,7 @@
                                                (POST "/" {body :body} (create-new-todo body))
                                                (context "/:id" [id] (defroutes todo-routes
                                                                                (GET "/" [] (get-todo id))
-                                                                               (PUT "/" {body :body} (update-document id body))
-                                                                               (DELETE "/" [] (delete-document id))))))
+                                                                               (PATCH "/" {body :body} (update-todo id body))
+                                                                               (DELETE "/" [] (delete-todo id))))))
            (GET "/" [] "Hello World")
            (route/not-found "Not Found"))

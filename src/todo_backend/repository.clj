@@ -13,6 +13,9 @@
   (println todo)
   todo)
 
+(defn- todo->setmap [todo]
+  todo)
+
 (defn- sql-result->id [result-seq]
   (->
     result-seq
@@ -35,7 +38,16 @@
                (sql/insert! db-spec :todos (todo->row incomplete-todo)))]
       (merge incomplete-todo {:id id}))))
 
+(defn update-todo!
+  [id todo]
+  (sql/update! db-spec :todos (todo->setmap todo) ["id = ?" id])
+  (get-by-id id))
+
 
 (defn delete-all!
   []
   (sql/delete! db-spec :todos []))
+
+(defn delete-by-id
+  [id]
+  (sql/delete! db-spec :todos ["id = ?" id]))
