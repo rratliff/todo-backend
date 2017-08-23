@@ -4,17 +4,16 @@
 
 (def db-spec {:classname "org.h2.Driver"
               :subprotocol "h2:file"
-              :subname "resources/db/documents;DB_CLOSE_DELAY=-1"})
+              :subname "resources/db/todos;DB_CLOSE_DELAY=-1"})
 
 (defn- row->todo [row]
-  row)
+  (rename-keys row {:position :order}))
 
 (defn- todo->row [todo]
-  (println todo)
-  todo)
+  (rename-keys todo {"order" :position}))
 
 (defn- todo->setmap [todo]
-  todo)
+  (rename-keys todo {"order" :position}))
 
 (defn- sql-result->id [result-seq]
   (->
@@ -40,7 +39,7 @@
 
 (defn update-todo!
   [id todo]
-  (sql/update! db-spec :todos (todo->setmap todo) ["id = ?" id])
+  (sql/update! db-spec :todos (todo->setmap todo) ["id = ?" id] {:row-fn row->todo})
   (get-by-id id))
 
 
